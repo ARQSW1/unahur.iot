@@ -1,0 +1,112 @@
+services:
+  rabbitmq:
+    image: masstransit/rabbitmq:latest
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 30s
+      retries: 10
+    networks:
+      - node-network
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+    restart: unless-stopped
+    user: '0:0'
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: PasswordO001.
+      MSSQL_PID: Express
+      TZ: America/Buenos_Aires
+    volumes:
+      - data-volume:/var/opt/mssql
+    networks:
+      - node-network
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:22.0
+  #   command: ["start-dev","--import-realm"]
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./dev-realm.json:/opt/keycloak/data/import/dev-realm.json
+  #   ports:
+  #     - '8080:8080'
+  #     - '8443:8443'
+  #   environment:
+  #     - TZ=America/Buenos_Aires
+  #     - KEYCLOAK_ADMIN=admin
+  #     - KEYCLOAK_ADMIN_PASSWORD=fruta
+  #     - KC_HEALTH_ENABLED=false
+  #     - KC_TRANSACTION_XA_ENABLED=false
+  #     - KC_HOSTNAME_STRICT= false
+  #     - KC_HTTP_ENABLED = false
+  #     - KC_OVERRIDE= false
+  #   networks:
+  #     - node-network
+  # mongodb:
+  #   image: mongo:6-jammy
+  #   ports:
+  #     - '27017:27017'
+  #   volumes:
+  #     - mongo-volume:/data/db
+  #     - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  #   restart: unless-stopped
+  #   environment:
+  #     - MONGO_INITDB_DATABASE=iot
+  #     - MONGO_INITDB_ROOT_USERNAME=root
+  #     - MONGO_INITDB_ROOT_PASSWORD=primaria
+  #   networks:
+  #     - node-network
+  # worker:
+  #   image: unaur.edu.ar/iot.worker
+  #   build:
+  #     context: ../../backend
+  #     dockerfile: ./UNAHUR.IoT.Worker/Dockerfile
+  #   volumes:
+  #     - ./appsettings.worker.json:/app/appsettings.json
+  #   environment:
+  #     - TZ=America/Buenos_Aires
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     sqlserver:
+  #       condition: service_started
+  #     mongodb:
+  #       condition: service_started
+  #   networks:
+  #     - node-network
+  #   mem_limit: 2048m
+  #   mem_reservation: 150m
+  #   cpus: 4
+  #   profiles: ["dev"] # docker-compose --profile dev up
+  api:
+    image: unaur.edu.ar/iot.api
+    build:
+      context: ../../backend
+      dockerfile: ./UNAHUR.IoT.Api/Dockerfile
+    ports:
+      - '9888:8080'
+    volumes:
+      - ./appsettings.api.json:/app/appsettings.json
+    environment:
+      - TZ=America/Buenos_Aires
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    networks:
+      - node-network
+    mem_limit: 300m
+    mem_reservation: 90m
+    cpus: 2
+    profiles: ["dev"] # docker-compose --profile dev up
+volumes:
+  data-volume:
+#  mongo-volume:
+networks:
+  node-network:
+    driver: bridge

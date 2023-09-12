@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UNAHUR.IoT.Api", "UNAHUR.IoT.Api\UNAHUR.IoT.Api.csproj", "{AFB1EA78-EB37-4766-99F0-E3D958DC7232}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UNAHUR.IoT.Shared.Web", "UNAHUR.IoT.Shared.Web\UNAHUR.IoT.Shared.Web.csproj", "{C6F53B2C-0496-4B89-BB7A-4F256DB35FBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNAHUR.IoT.Business", "UNAHUR.IoT.Business\UNAHUR.IoT.Business.csproj", "{49A87954-4E2B-4892-96AA-C312C2B1BEEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNAHUR.IoT.DAL", "UNAHUR.IoT.DAL\UNAHUR.IoT.DAL.csproj", "{5E8D053A-3F1F-4D4C-8C41-1DD624D716BD}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "UNAHUR.IoT.Database", "UNAHUR.IoT.Database\UNAHUR.IoT.Database.sqlproj", "{EEDB57AB-4476-4034-B6EA-E1254E86A673}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UNAHUR.IoT.Messaging", "UNAHUR.IoT.Messaging\UNAHUR.IoT.Messaging.csproj", "{FF26A816-5FB5-432F-833F-64C9EE134695}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AFB1EA78-EB37-4766-99F0-E3D958DC7232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB1EA78-EB37-4766-99F0-E3D958DC7232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFB1EA78-EB37-4766-99F0-E3D958DC7232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFB1EA78-EB37-4766-99F0-E3D958DC7232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F53B2C-0496-4B89-BB7A-4F256DB35FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F53B2C-0496-4B89-BB7A-4F256DB35FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F53B2C-0496-4B89-BB7A-4F256DB35FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F53B2C-0496-4B89-BB7A-4F256DB35FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49A87954-4E2B-4892-96AA-C312C2B1BEEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49A87954-4E2B-4892-96AA-C312C2B1BEEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49A87954-4E2B-4892-96AA-C312C2B1BEEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49A87954-4E2B-4892-96AA-C312C2B1BEEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E8D053A-3F1F-4D4C-8C41-1DD624D716BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E8D053A-3F1F-4D4C-8C41-1DD624D716BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E8D053A-3F1F-4D4C-8C41-1DD624D716BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E8D053A-3F1F-4D4C-8C41-1DD624D716BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEDB57AB-4476-4034-B6EA-E1254E86A673}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FF26A816-5FB5-432F-833F-64C9EE134695}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF26A816-5FB5-432F-833F-64C9EE134695}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF26A816-5FB5-432F-833F-64C9EE134695}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF26A816-5FB5-432F-833F-64C9EE134695}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AEAFBD82-AA43-4F1A-9D83-B7481E201F6E}
+	EndGlobalSection
+EndGlobal
