@@ -12,6 +12,7 @@ services:
       retries: 10
     networks:
       - node-network
+  # deberiamos cambiar a POSGRESS o MONGODB (para no tener migrations)
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
@@ -28,6 +29,7 @@ services:
       - data-volume:/var/opt/mssql
     networks:
       - node-network
+
   # keycloak:
   #   image: quay.io/keycloak/keycloak:22.0
   #   command: ["start-dev","--import-realm"]

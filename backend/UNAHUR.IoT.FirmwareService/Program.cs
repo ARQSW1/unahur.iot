@@ -1,6 +1,4 @@
-
-
-namespace UNAHUR.IoT.Api
+namespace UNAHUR.IoT.FirmwareService
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
