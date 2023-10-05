@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
+using UNAHUR.IoT.FirmwareService.Storage;
+using Efunds.Shared.Web.Extensions;
 
 namespace UNAHUR.IoT.FirmwareService
 {
@@ -53,7 +55,7 @@ namespace UNAHUR.IoT.FirmwareService
             services.AddHealthChecks();
 
             services.AddIoTBusiness(config);
-            //services.AddFileStorage(config);
+            services.AddFirmwareStorageService(config);
 
             #region SEGURIDAD
             services.AddAuthentication(options =>
@@ -115,8 +117,6 @@ namespace UNAHUR.IoT.FirmwareService
 
                 services.AddSwaggerGenExtended(c =>
                 {
-
-
                     var authUrl = StringHelpers.UrlCombine(jwtOptions.Authority, "/protocol/openid-connect/auth");
                     var tokenhUrl = StringHelpers.UrlCombine(jwtOptions.Authority, "/protocol/openid-connect/token");
 
@@ -128,7 +128,6 @@ namespace UNAHUR.IoT.FirmwareService
                         {
                             AuthorizationCode = new OpenApiOAuthFlow
                             {
-
                                 AuthorizationUrl = new Uri(authUrl),
                                 TokenUrl = new Uri(tokenhUrl),
                                 Scopes = new Dictionary<string, string>

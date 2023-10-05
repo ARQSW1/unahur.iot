@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
     /// </summary>
     [ApiController]
     [AllowAnonymous]
-    [Route("api/v{version:apiVersion}/catalog")]
+    [Route("api/v{version:apiVersion}/firmware")]
     [ApiVersion("1.0")]
     public class FirmwareController : ControllerBase
     {
@@ -43,6 +44,26 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
 
             return Ok(item);
 
+        }
+
+        /// <summary>
+        /// Uploads a collections of foñeInfo 
+        /// </summary>
+        /// <param name="grantorId"></param>
+        /// <param name="interfaceName">Nombre de la interface a subir</param>
+        /// <param name="uploadedFiles"></param>
+        /// <returns>El grupo asignado para el tratamiento del archivo</returns>
+        [HttpPut("{repo}/{tag}")]
+        // IMPORTANTE: MultipartBodyLengthLimit debe estar alineado con el Kestrel.Limits.MaxRequestBodySize en el appsettings
+        // esto es 250MB
+        [RequestFormLimits(MultipartBodyLengthLimit = 262_144_000)]
+        public async Task<ActionResult<long>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
+        {
+            // TODO: verificar si el usuario puede subir al grantorId
+
+            
+
+            return Ok(1);
         }
     }
 }

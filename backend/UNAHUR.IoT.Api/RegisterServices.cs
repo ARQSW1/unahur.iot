@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
+using Efunds.Shared.Web.Extensions;
+
 namespace UNAHUR.IoT.Api
 {
     /// <summary>

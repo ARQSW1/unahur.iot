@@ -1,6 +1,6 @@
 # Docker compose
 
-Para iniciar solo los backing services (sqlserver, mongo y rabbit)
+Para iniciar solo los backing services (sqlserver, minio y rabbit)
 
 ```bash
 docker-compose --project-name iot up -d

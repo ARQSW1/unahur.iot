@@ -29,7 +29,31 @@ services:
       - data-volume:/var/opt/mssql
     networks:
       - node-network
-
+  minio:
+    image: quay.io/minio/minio:RELEASE.2023-09-30T07-02-29Z
+    restart: always
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: &access_key minio
+      MINIO_ROOT_PASSWORD: &secret_key minio123
+    # the mkdir creates the REGISTRY_STORAGE_S3_BUCKET
+    #command: -c 'mkdir -p /data/docker-registry && /usr/bin/minio server /data'
+    command: server --console-address ":9001" /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+  createbuckets:
+    image: quay.io/minio/mc:RELEASE.2023-09-29T16-41-22Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
+      /usr/bin/mc mb myminio/firmware-registry;
+      /usr/bin/mc policy set public myminio/firmware-registry;
+      exit 0;
+      "
   # keycloak:
   #   image: quay.io/keycloak/keycloak:22.0
   #   command: ["start-dev","--import-realm"]
@@ -48,20 +72,6 @@ services:
   #     - KC_HOSTNAME_STRICT= false
   #     - KC_HTTP_ENABLED = false
   #     - KC_OVERRIDE= false
-  #   networks:
-  #     - node-network
-  # mongodb:
-  #   image: mongo:6-jammy
-  #   ports:
-  #     - '27017:27017'
-  #   volumes:
-  #     - mongo-volume:/data/db
-  #     - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  #   restart: unless-stopped
-  #   environment:
-  #     - MONGO_INITDB_DATABASE=iot
-  #     - MONGO_INITDB_ROOT_USERNAME=root
-  #     - MONGO_INITDB_ROOT_PASSWORD=primaria
   #   networks:
   #     - node-network
   # worker:
@@ -108,6 +118,7 @@ services:
     profiles: ["dev"] # docker-compose --profile dev up
 volumes:
   data-volume:
+  minio-data:
 #  mongo-volume:
 networks:
   node-network:

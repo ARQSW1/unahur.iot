@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Efunds.Shared.Web.Extensions;
 
 namespace UNAHUR.IoT.Api
 {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace UNAHUR.IoT.Api
+namespace Efunds.Shared.Web.Extensions
 {
     /// <summary>
-    /// Configuration extensions for the API
+    /// Configuration extensions for API
     /// </summary>
-    public static class ConfigurationExtensions
+    public static class IConfigurationExtensions
     {
         /// <summary>
         /// Are swagger endpoints enabled?
