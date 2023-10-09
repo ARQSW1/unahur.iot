@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UNAHUR.IoT.Business.Services;
 using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.FirmwareService.Storage;
 
 namespace UNAHUR.IoT.FirmwareService.Controllers.v1
 {
@@ -22,10 +23,14 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
     {
         private readonly ILogger<FirmwareController> _log;
         private readonly CatalogService _catalogService;
-        public FirmwareController(ILogger<FirmwareController> log, CatalogService catalogService)
+        private readonly IFirmwareStorage _firmwareStorage;
+        public FirmwareController(ILogger<FirmwareController> log, 
+            CatalogService catalogService,
+            IFirmwareStorage firmwareStorage)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _catalogService = catalogService ?? throw new ArgumentNullException(nameof(catalogService));
+            _firmwareStorage = firmwareStorage ?? throw new ArgumentNullException(nameof(firmwareStorage));
         }
 
         /// <summary>
@@ -47,7 +52,7 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         }
 
         /// <summary>
-        /// Uploads a collections of foñeInfo 
+        /// Uploads a firmware 
         /// </summary>
         /// <param name="grantorId"></param>
         /// <param name="interfaceName">Nombre de la interface a subir</param>
@@ -59,9 +64,11 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         [RequestFormLimits(MultipartBodyLengthLimit = 262_144_000)]
         public async Task<ActionResult<long>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
         {
-            // TODO: verificar si el usuario puede subir al grantorId
+            // verificar si el usuario tiene permisos en el dispositivo
 
-            
+            await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, Request.HttpContext.RequestAborted);
+
+
 
             return Ok(1);
         }

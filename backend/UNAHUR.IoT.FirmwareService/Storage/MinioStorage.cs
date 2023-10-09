@@ -1,4 +1,5 @@
-﻿using MassTransit.Caching.Internals;
+﻿using MassTransit;
+using MassTransit.Caching.Internals;
 using MassTransit.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,29 +73,41 @@ namespace UNAHUR.IoT.FirmwareService.Storage
             return found;
         }
 
-        // ver https://github.com/minio/minio-dotnet/blob/master/Minio.Examples/Cases/PutObject.cs
-        public async Task<long> UploadAsync(string repo, string tag, IFormFile file, CancellationToken cancelationToken){
+        // Ver https://github.com/minio/minio-dotnet/blob/master/Minio.Examples/Cases/PutObject.cs
+        public async Task<string> UploadAsync(string repo, string tag, IFormFile file, CancellationToken cancelationToken= default){
 
             // Make a bucket on the server, if not already present.
             var beArgs = new BucketExistsArgs()
                 .WithBucket(_bucket);
             bool found = await minio.BucketExistsAsync(beArgs, cancelationToken).ConfigureAwait(false);
-
+            
             if (!found)
             {
+                _log.LogInformation("El {_bucket} no existe y sera creado",_bucket);
+
                 var mbArgs = new MakeBucketArgs()
                     .WithBucket(_bucket);
-                await minio.MakeBucketAsync(mbArgs).ConfigureAwait(false);
+                await minio.MakeBucketAsync(mbArgs, cancelationToken).ConfigureAwait(false);
             }
+
+
             var metaData = new Dictionary<string, string>
                 (StringComparer.Ordinal) { { "Test-Metadata", "Test  Test" } };
+
+            // check if object exists
+            // IMPORTANTE: DOCUMENTACION ACERCA DEL OBJECTNAME Y EL FILENAME 
+            // https://min.io/docs/minio/windows/administration/object-management.html#id1
+            var objectName = repo + "/" + tag;
+
+            var fileName = file.Name;
 
             using (var stream = file.OpenReadStream())
             {
                 // Upload a file to bucket.
                 var putObjectArgs = new PutObjectArgs()
                     .WithBucket(_bucket)
-                    .WithObject(objectName)  
+                    .WithObject(objectName)
+                    .WithFileName(fileName)
                     .WithStreamData(stream)
                     .WithObjectSize(stream.Length)
                     .WithHeaders(metaData)
@@ -104,7 +117,7 @@ namespace UNAHUR.IoT.FirmwareService.Storage
             }
             // response.Etag
 
-            return 1;
+            return objectName;
         }
 
     }
