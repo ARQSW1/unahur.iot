@@ -62,7 +62,7 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         // IMPORTANTE: MultipartBodyLengthLimit debe estar alineado con el Kestrel.Limits.MaxRequestBodySize en el appsettings
         // esto es 250MB
         [RequestFormLimits(MultipartBodyLengthLimit = 262_144_000)]
-        public async Task<ActionResult<long>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
+        public async Task<ActionResult<string>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
         {
             // verificar si el usuario tiene permisos en el dispositivo
 
@@ -70,7 +70,13 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
 
 
 
-            return Ok(1);
+            return Ok(await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, Request.HttpContext.RequestAborted));
+        }
+
+        
+        [HttpPut("test")]
+        public async Task<ActionResult<bool>> TestAsync() {
+            return Ok(await _firmwareStorage.TestAsync(Request.HttpContext.RequestAborted));
         }
     }
 }

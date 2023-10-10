@@ -19,6 +19,7 @@ using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
 using UNAHUR.IoT.FirmwareService.Storage;
 using Efunds.Shared.Web.Extensions;
+using Minio;
 
 namespace UNAHUR.IoT.FirmwareService
 {
@@ -52,10 +53,13 @@ namespace UNAHUR.IoT.FirmwareService
             var jwtOptions = config.GetSection(JWT_SECTION_NAME).Get<JwtBearerOptions>();
 
 
-            services.AddHealthChecks();
+          
+
+            services.AddFirmwareStorageService(config);
 
             services.AddIoTBusiness(config);
-            services.AddFirmwareStorageService(config);
+
+            services.AddHealthChecks();
 
             #region SEGURIDAD
             services.AddAuthentication(options =>

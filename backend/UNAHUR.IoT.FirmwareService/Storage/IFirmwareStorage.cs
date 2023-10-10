@@ -7,5 +7,6 @@ namespace UNAHUR.IoT.FirmwareService.Storage
     public interface IFirmwareStorage
     {
         Task<string> UploadAsync(string repo, string tag, IFormFile file, CancellationToken cancelationToken = default);
+        Task<bool> TestAsync(CancellationToken cancelationToken = default);
     }
 }
