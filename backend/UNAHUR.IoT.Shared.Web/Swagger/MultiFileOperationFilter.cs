@@ -35,7 +35,7 @@ namespace Efunds.Shared.Web.Swagger
                             Type = "array",
                             Items= new OpenApiSchema()
                             {
-                                Type = "string", // VA CON LA PRIMERA LETRA MAYUSCULA SINO EL OPEN API GEN NO LO TOMA BIEN
+                                Type = "string", 
                                 Format = "binary",
                             },
                         }

@@ -30,7 +30,7 @@ namespace Efunds.Shared.Web.Swagger
                         ["uploadedFile"] = new OpenApiSchema()
                         {
                             Description = "Upload Files",
-                            Type = "File",// VA CON LA PRIMERA LETRA MAYUSCULA SINO EL OPEN API GEN NO LO TOMA BIEN
+                            Type = "file",// ahora va con minuscula, sino no lo toma
                             Format = "binary",
 
                         }
