@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
+using Minio.DataModel.Tags;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -85,7 +86,7 @@ namespace UNAHUR.IoT.FirmwareService.Storage
         /// <param name="file"></param>
         /// <param name="cancelationToken"></param>
         /// <returns>El identificador unico del archivo</returns>
-        public async Task<string> UploadAsync(string repo, string tag, IFormFile file, CancellationToken cancelationToken = default)
+        public async Task<string> UploadAsync(string repo, string tag, IFormFile file, IDictionary<string, string> tags = null, CancellationToken cancelationToken = default)
         {
 
             
@@ -99,7 +100,7 @@ namespace UNAHUR.IoT.FirmwareService.Storage
             // https://min.io/docs/minio/windows/administration/object-management.html#id1
             var objectName = repo + "/" + tag;
 
-            var fileName = file.Name;
+            
 
             using (var stream = file.OpenReadStream())
             {
@@ -107,18 +108,21 @@ namespace UNAHUR.IoT.FirmwareService.Storage
                 var putObjectArgs = new PutObjectArgs()
                     .WithBucket(_bucket)
                     .WithObject(objectName)
-                    .WithFileName(fileName)
+                    //.WithFileName(fileName)
                     .WithStreamData(stream)
                     .WithObjectSize(stream.Length)
                     .WithHeaders(metaData)
-                    .WithContentType("application/octet-stream");
-
+                    .WithTagging(Tagging.GetBucketTags(tags))
+                    .WithContentType(file.ContentType);
+                
                 var response = await minio.PutObjectAsync(putObjectArgs, cancelationToken).ConfigureAwait(false);
             }
             // response.Etag
 
             return objectName;
         }
+
+
 
 
         #region Private Methods

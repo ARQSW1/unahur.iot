@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UNAHUR.IoT.Business.Services;
@@ -24,7 +25,7 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         private readonly ILogger<FirmwareController> _log;
         private readonly CatalogService _catalogService;
         private readonly IFirmwareStorage _firmwareStorage;
-        public FirmwareController(ILogger<FirmwareController> log, 
+        public FirmwareController(ILogger<FirmwareController> log,
             CatalogService catalogService,
             IFirmwareStorage firmwareStorage)
         {
@@ -64,18 +65,19 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         [RequestFormLimits(MultipartBodyLengthLimit = 262_144_000)]
         public async Task<ActionResult<string>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
         {
-            // verificar si el usuario tiene permisos en el dispositivo
+            var tags = new Dictionary<string, string>
+        {
+            { "repo", repo },
+            { "filename", "value2" }
+        };
 
-            await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, Request.HttpContext.RequestAborted);
-
-
-
-            return Ok(await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, Request.HttpContext.RequestAborted));
+            return Ok(await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, tags, Request.HttpContext.RequestAborted));
         }
 
-        
+
         [HttpPut("test")]
-        public async Task<ActionResult<bool>> TestAsync() {
+        public async Task<ActionResult<bool>> TestAsync()
+        {
             return Ok(await _firmwareStorage.TestAsync(Request.HttpContext.RequestAborted));
         }
     }
