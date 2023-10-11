@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Minio.DataModel.Tags;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UNAHUR.IoT.Business.Services;
@@ -65,14 +67,49 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
         [RequestFormLimits(MultipartBodyLengthLimit = 262_144_000)]
         public async Task<ActionResult<string>> UploadAsync(string repo, string tag, [FromForm] IFormFile uploadedFile)
         {
+            // estos datos deberian estar normalizados?
+            // usuario de alta por ejemplo?
+            // algun dato para relacionar con el modelo relacional.
+
             var tags = new Dictionary<string, string>
         {
             { "repo", repo },
-            { "filename", "value2" }
+            { "originalName", uploadedFile.FileName }
         };
 
-            return Ok(await _firmwareStorage.UploadAsync(repo, tag, uploadedFile, tags, Request.HttpContext.RequestAborted));
+            using (var stream = uploadedFile.OpenReadStream())
+            {
+                var firmwareModel = new FirmwareModel(repo, tag, uploadedFile.ContentType, stream);
+                return Ok(await _firmwareStorage.UploadAsync(firmwareModel, tags, Request.HttpContext.RequestAborted));
+            }
         }
+
+        /// <summary>
+        /// Uploads a firmware 
+        /// </summary>
+        /// <param name="grantorId"></param>
+        /// <param name="interfaceName">Nombre de la interface a subir</param>
+        /// <param name="uploadedFiles"></param>
+        /// <returns>El grupo asignado para el tratamiento del archivo</returns>
+        [HttpGet("{repo}/{tag}")]
+
+        public async Task<IActionResult> DownloadAsync(string repo, string tag)
+        {
+            var file = await _firmwareStorage.DownloadAsync(repo, tag,  Request.HttpContext.RequestAborted);
+            var content = file.DataStream;
+
+            this.Response.ContentLength = content.Length;
+            this.Response.Headers.Add("Accept-Ranges", "bytes");
+            this.Response.Headers.Add("Content-Range", "bytes 0-" + content.Length);
+
+            return File(content, file.ContentType, file.Name);
+            
+        }
+
+        // TODO: EL ENDOPINT PARA LOS DISPOSITIVOS
+        // DEBE TENER COMO ENTRADA SOLO EL ID DE DISPOSITIVO Y SE DEBE RESOLVER EL FIRMWARE CORRESPONDIENTE
+        // LA AUTORIZACION DEBE SER CON EL SECRET DEL DISPOSIVO
+
 
 
         [HttpPut("test")]
