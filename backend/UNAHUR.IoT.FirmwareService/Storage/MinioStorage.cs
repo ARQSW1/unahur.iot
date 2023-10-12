@@ -156,7 +156,7 @@ namespace UNAHUR.IoT.FirmwareService.Storage
             var args = new GetObjectArgs()
                 .WithBucket(_bucket)
                 .WithObject(objectName)
-                .WithCallbackStream((s, t) => s.CopyToAsync(outputStream, t));
+                .WithCallbackStream(async (s, t) => await s.CopyToAsync(outputStream, t));
             var ret = await minio.GetObjectAsync(args, cancellationToken: cancellationToken);
 
             return new FirmwareModel(repo, name, ret.ContentType, outputStream);

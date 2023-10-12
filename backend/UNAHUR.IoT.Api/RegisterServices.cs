@@ -3,7 +3,6 @@ using UNAHUR.IoT.Shared.Web.Utils;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +17,8 @@ using System.Text.Json.Serialization;
 using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
 using Efunds.Shared.Web.Extensions;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 
 namespace UNAHUR.IoT.Api
 {
@@ -79,13 +80,13 @@ namespace UNAHUR.IoT.Api
                 // versionado por namespace
                 //config.Conventions.Add(new VersionByNamespaceConvention());
             });
-
+            /*
             builder.Services.AddVersionedApiExplorer(setup =>
             {
                 setup.GroupNameFormat = "'v'VVV";
                 // esto es verdadero por que colocamos la version de la api en el controlador
                 setup.SubstituteApiVersionInUrl = true;
-            });
+            });*/
 
             #endregion VERSIONADO DE API 
 

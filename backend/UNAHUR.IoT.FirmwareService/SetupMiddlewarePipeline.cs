@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Efunds.Shared.Web.Extensions;
+using Asp.Versioning.ApiExplorer;
 
 namespace UNAHUR.IoT.FirmwareService
 {

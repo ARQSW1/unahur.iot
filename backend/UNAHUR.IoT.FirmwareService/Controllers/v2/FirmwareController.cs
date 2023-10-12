@@ -12,7 +12,7 @@ using UNAHUR.IoT.Business.Services;
 using UNAHUR.IoT.DAL.MOdels;
 using UNAHUR.IoT.FirmwareService.Storage;
 
-namespace UNAHUR.IoT.FirmwareService.Controllers.v1
+namespace UNAHUR.IoT.FirmwareService.Controllers.v2
 {
     /// <summary>
     /// Controlador que encapsula las acciones de formware para los dispositovos
@@ -20,7 +20,7 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
     [ApiController]
     [AllowAnonymous]
     [Route("api/v{version:apiVersion}/firmware")]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class FirmwareController : ControllerBase
     {
         private readonly ILogger<FirmwareController> _log;
@@ -111,10 +111,5 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
 
 
 
-        [HttpPut("test")]
-        public async Task<ActionResult<bool>> TestAsync()
-        {
-            return Ok(await _firmwareStorage.TestAsync(Request.HttpContext.RequestAborted));
-        }
     }
 }

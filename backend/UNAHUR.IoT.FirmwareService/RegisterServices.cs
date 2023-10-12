@@ -20,6 +20,7 @@ using UNAHUR.IoT.Business;
 using UNAHUR.IoT.FirmwareService.Storage;
 using Efunds.Shared.Web.Extensions;
 using Minio;
+using Asp.Versioning;
 
 namespace UNAHUR.IoT.FirmwareService
 {
@@ -75,24 +76,7 @@ namespace UNAHUR.IoT.FirmwareService
             });
             #endregion SEGURIDAD
 
-            #region VERSIONADO DE API 
-            services.AddApiVersioning(config =>
-            {
-                config.DefaultApiVersion = new ApiVersion(1, 0);
-                config.AssumeDefaultVersionWhenUnspecified = true;
-                config.ReportApiVersions = true;
-                // versionado por namespace
-                //config.Conventions.Add(new VersionByNamespaceConvention());
-            });
-
-            builder.Services.AddVersionedApiExplorer(setup =>
-            {
-                setup.GroupNameFormat = "'v'VVV";
-                // esto es verdadero por que colocamos la version de la api en el controlador
-                setup.SubstituteApiVersionInUrl = true;
-            });
-
-            #endregion VERSIONADO DE API 
+            
 
             services.AddControllers()
                 .AddJsonOptions(options =>
@@ -111,10 +95,33 @@ namespace UNAHUR.IoT.FirmwareService
 
             });
 
+            #region VERSIONADO DE API 
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+                // versionado por namespace
+                //config.Conventions.Add(new VersionByNamespaceConvention());
+            }).AddApiExplorer(
+                    options =>
+                    {
+                        // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                        // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                        options.GroupNameFormat = "'v'VVV";
 
+                        // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                        // can also be used to control the format of the API version in route templates
+                        options.SubstituteApiVersionInUrl = true;
+                    });
+
+
+
+            #endregion VERSIONADO DE API 
 
             if (config.IsSwaggerEnabled())
             {
+
 
                 // necesario para configurar la api con la descripcion que corresponda y la documentacion
                 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
