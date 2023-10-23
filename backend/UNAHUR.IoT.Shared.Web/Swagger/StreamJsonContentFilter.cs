@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 
-namespace Efunds.Shared.Web.Swagger
+namespace UNAHUR.IoT.Shared.Web.Swagger
 {
     public class StreamJsonContentFilter : IOperationFilter
     {

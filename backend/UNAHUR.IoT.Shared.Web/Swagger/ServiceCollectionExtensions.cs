@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 
-namespace Efunds.Shared.Web.Swagger
+namespace UNAHUR.IoT.Shared.Web.Swagger
 {
     /// <summary>
     ///
@@ -19,11 +19,7 @@ namespace Efunds.Shared.Web.Swagger
 
         public static IServiceCollection AddSwaggerGenExtended(this IServiceCollection services, Action<SwaggerGenOptions> setupAction = null)
         {
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            services.AddEndpointsApiExplorer();
-
             var serviceProvider = services.BuildServiceProvider();
-
 
             services.AddSwaggerGen(c =>
             {
@@ -38,27 +34,14 @@ namespace Efunds.Shared.Web.Swagger
                 });
 
 
-                // definie el operation id default
-                /*c.CustomOperationIds(c =>
-                {
-
-                    if (c.TryGetMethodInfo(out MethodInfo methodInfo))
-                    {
-                        return methodInfo.Name + methodInfo.;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-
-
-                });*/
-
-
+                // https://github.com/dotnet/aspnet-api-versioning/wiki/Swashbuckle-Integration
                 c.OperationFilter<SwaggerDefaultValues>();
+
 
                 c.OperationFilter<StreamJsonContentFilter>();
 
+
+                // TODO: REVISAR SI HACE FALTA
                 c.OperationFilter<XOperationNameOperationFilter>();
 
 
@@ -72,6 +55,7 @@ namespace Efunds.Shared.Web.Swagger
                 c.OperationFilter<MultiFileOperationFilter>();
 
                 c.DescribeAllParametersInCamelCase();
+
                 setupAction?.Invoke(c);
 
 

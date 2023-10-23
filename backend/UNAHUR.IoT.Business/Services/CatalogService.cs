@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UNAHUR.IoT.DAL.Context;
-using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.DAL.Models;
 
 namespace UNAHUR.IoT.Business.Services
 {

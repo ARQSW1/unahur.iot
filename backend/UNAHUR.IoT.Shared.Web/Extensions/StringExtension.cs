@@ -1,4 +1,4 @@
-﻿namespace Efunds.Shared.Web.Extensions
+﻿namespace UNAHUR.IoT.Shared.Web.Extensions
 {
     public static class StringExtension
     {

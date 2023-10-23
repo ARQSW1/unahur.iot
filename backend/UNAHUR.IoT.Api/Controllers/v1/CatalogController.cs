@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UNAHUR.IoT.Business.Services;
-using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.DAL.Models;
 
 namespace UNAHUR.IoT.Api.Controllers.v1
 {

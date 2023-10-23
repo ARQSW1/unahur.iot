@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace Efunds.Shared.Web.Extensions
+namespace UNAHUR.IoT.Shared.Web.Extensions
 {
     /// <summary>
     /// Configuration extensions for API

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Efunds.Shared.Web.Swagger
+namespace UNAHUR.IoT.Shared.Web.Swagger
 {
     /// <summary>
     /// Agrega un parametro de body con un esquema vacio que admite propiedades adicionales, es decir json sin esquema

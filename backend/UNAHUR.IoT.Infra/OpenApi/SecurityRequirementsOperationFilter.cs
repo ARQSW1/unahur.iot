@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace UNAHUR.IoT.OpenApi;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace UNAHUR.IoT.Shared.Web.Swagger
-{
+
     /// <summary>
     /// Filtro de swagger que detecta aquellos controladores con el atributo [Authorize]
     /// y les genera las respuestas 401, 403 y les agrega una referencia al esquema de authorizacion
     /// </summary>
-    public class SecurityRequirementsOperationFilter : IOperationFilter
+    internal class SecurityRequirementsOperationFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
@@ -27,7 +29,7 @@ namespace UNAHUR.IoT.Shared.Web.Swagger
                 if (!operation.Responses.ContainsKey("403"))
                     operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
 
-                /* --ESTO SOLO VA SI ES CON OAUTH
+                 
                 var oAuthScheme = new OpenApiSecurityScheme
                 {
                     Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
@@ -39,13 +41,7 @@ namespace UNAHUR.IoT.Shared.Web.Swagger
                     {
                         [ oAuthScheme ] = requiredScopes.ToList()
                     }
-                };*/
+                };
             }
         }
     }
-
-
-
-
-
-}

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Efunds.Shared.Web.Extensions;
+using UNAHUR.IoT.Shared.Web.Extensions;
 using Asp.Versioning.ApiExplorer;
 
 namespace UNAHUR.IoT.Api
@@ -48,7 +48,7 @@ namespace UNAHUR.IoT.Api
                     foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                     {
                         options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
-                            description.GroupName.ToUpperInvariant());
+                            description.GroupName);
                     }
                 });
             }

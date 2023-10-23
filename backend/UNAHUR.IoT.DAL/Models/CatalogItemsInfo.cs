@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using UNAHUR.IoT.DAL.Converters;
 
-namespace UNAHUR.IoT.DAL.MOdels;
+namespace UNAHUR.IoT.DAL.Models;
 
 [Keyless]
 public partial class CatalogItemsInfo

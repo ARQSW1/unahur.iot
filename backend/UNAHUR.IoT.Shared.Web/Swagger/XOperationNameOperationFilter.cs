@@ -1,11 +1,11 @@
-﻿using Efunds.Shared.Web.Extensions;
+﻿using UNAHUR.IoT.Shared.Web.Extensions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 
 
-namespace Efunds.Shared.Web.Swagger
+namespace UNAHUR.IoT.Shared.Web.Swagger
 {
     /// <summary>
     /// Agrega el atributo x-operation-name a todos los metodos. 

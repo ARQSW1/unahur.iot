@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using UNAHUR.IoT.DAL.Context.Configurations;
-using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.DAL.Models;
 #nullable disable
 
 namespace UNAHUR.IoT.DAL.Context;

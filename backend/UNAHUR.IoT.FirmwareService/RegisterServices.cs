@@ -1,4 +1,4 @@
-﻿using Efunds.Shared.Web.Swagger;
+﻿using UNAHUR.IoT.Shared.Web.Swagger;
 using UNAHUR.IoT.Shared.Web.Utils;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,9 +18,10 @@ using System.Text.Json.Serialization;
 using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
 using UNAHUR.IoT.FirmwareService.Storage;
-using Efunds.Shared.Web.Extensions;
-using Minio;
 using Asp.Versioning;
+using System.Linq;
+using Microsoft.OpenApi.Any;
+using Microsoft.EntityFrameworkCore;
 
 namespace UNAHUR.IoT.FirmwareService
 {
@@ -30,6 +31,7 @@ namespace UNAHUR.IoT.FirmwareService
     public static class WebApplicationBuilderExtensions
     {
         private const string JWT_SECTION_NAME = "JwtAuthentication";
+        private const string KESTREL_SECTION_NAME = "Kestrel";
 
         /// <summary>
         /// Service registration for the entire app
@@ -46,15 +48,45 @@ namespace UNAHUR.IoT.FirmwareService
             IdentityModelEventSource.ShowPII = true;
 
             // kestrel config
-            services.Configure<KestrelServerOptions>(config.GetSection("Kestrel"));
+            services.Configure<KestrelServerOptions>(config.GetSection(KESTREL_SECTION_NAME));
+
+            //
             services.Configure<RabbitMqSettings>(config.GetSection("RabbitMQ"));
+
             // carga la configuracion de JWT
             services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, config.GetSection(JWT_SECTION_NAME));
+            
             // Configuracion del JWT para inyectar en swagger
             var jwtOptions = config.GetSection(JWT_SECTION_NAME).Get<JwtBearerOptions>();
+            
+            #region CORS
+            services.AddCors(options =>
+            {
+                var origins = builder.Configuration.CorsOrigins();
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    if (origins != null || origins.Contains("*"))
+                    {
+                        policy.AllowAnyOrigin();
+                    }
+                    else
+                    {
+                        policy.AllowCredentials();
+                        policy.WithOrigins(origins).SetIsOriginAllowedToAllowWildcardSubdomains();
+                    }
 
+                });
 
-          
+                options.AddPolicy("AnyOrigin", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod();
+                });
+            });
+            #endregion
 
             services.AddFirmwareStorageService(config);
 
@@ -74,26 +106,27 @@ namespace UNAHUR.IoT.FirmwareService
                 if (!options.TokenValidationParameters.ValidateIssuer)
                     options.BackchannelHttpHandler = new DevelopmentBackchannelHttpHandler();
             });
-            #endregion SEGURIDAD
 
-            
+            #endregion SEGURIDAD
 
             services.AddControllers()
                 .AddJsonOptions(options =>
-            {
-                // arregla un problema con los enums en swagger 
-                // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-586284629
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            }).AddOData(opt =>
-            {
-                opt.AddRouteComponents("odata/v1", SetupOData.GetEdmModel_V1());
-                // habilita las funciones en ODATA 
-                opt.Select().Filter().OrderBy().Expand();
-                // si se debe hacer un cambio drastico al ODATA se puede hacer en una version 2 simultanea
-                //opt.AddRouteComponents("odata/v2", SetupOData.GetEdmModel_V2());
+                {
+                    // arregla un problema con los enums en swagger 
+                    // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-586284629
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                }).AddOData(opt =>
+                {
+                    opt.AddRouteComponents("odata/v1", SetupOData.GetEdmModel_V1());
+                    //opt.AddRouteComponents("odata/v2", SetupOData.GetEdmModel_V2());
+                    // habilita las funciones en ODATA 
+                    opt.Select().Filter().OrderBy().Expand();
+                    // si se debe hacer un cambio drastico al ODATA se puede hacer en una version 2 simultanea
+                    
 
-            });
+                });
+            
 
             #region VERSIONADO DE API 
             services.AddApiVersioning(config =>
@@ -101,19 +134,20 @@ namespace UNAHUR.IoT.FirmwareService
                 config.DefaultApiVersion = new ApiVersion(1, 0);
                 config.AssumeDefaultVersionWhenUnspecified = true;
                 config.ReportApiVersions = true;
-                // versionado por namespace
-                //config.Conventions.Add(new VersionByNamespaceConvention());
-            }).AddApiExplorer(
-                    options =>
-                    {
-                        // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
-                        // note: the specified format code will format the version as "'v'major[.minor][-status]"
-                        options.GroupNameFormat = "'v'VVV";
+                config.ApiVersionReader = new UrlSegmentApiVersionReader();
+                config.ApiVersionSelector = new CurrentImplementationApiVersionSelector(config);
+                
+                
+            }).AddApiExplorer(options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
 
-                        // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
-                        // can also be used to control the format of the API version in route templates
-                        options.SubstituteApiVersionInUrl = true;
-                    });
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+            });
 
 
 
@@ -130,7 +164,12 @@ namespace UNAHUR.IoT.FirmwareService
                 {
                     var authUrl = StringHelpers.UrlCombine(jwtOptions.Authority, "/protocol/openid-connect/auth");
                     var tokenhUrl = StringHelpers.UrlCombine(jwtOptions.Authority, "/protocol/openid-connect/token");
-
+                    // PARA EVITAR QUE EL HierarchyId SE VEA
+                    c.MapType(typeof(HierarchyId), () => new OpenApiSchema
+                    {
+                        Type = "string",
+                        Example = new OpenApiString("/")
+                    });
                     // Define the OAuth2.0 scheme that's in use (i.e. Implicit Flow)
                     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                     {
@@ -143,23 +182,22 @@ namespace UNAHUR.IoT.FirmwareService
                                 TokenUrl = new Uri(tokenhUrl),
                                 Scopes = new Dictionary<string, string>
                             {
-                                { "openid", "openid" },
-                                { "profile", "perfil" }
+                                { "openid", "openid" }
                             }
                             }
                         }
                     });
 
                     c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
                     {
-                        new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-                        },
-                        new[] { "profile" }
-                    }
-                });
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+                            },
+                            new[] { "openid" }
+                        }
+                    });
 
                 });
             }
@@ -178,6 +216,7 @@ namespace UNAHUR.IoT.FirmwareService
                 });
             });
             #endregion MassTransit
+
             return builder;
         }
 

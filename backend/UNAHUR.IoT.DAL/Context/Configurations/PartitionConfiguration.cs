@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using UNAHUR.IoT.DAL.Context;
-using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.DAL.Models;
 
 namespace UNAHUR.IoT.DAL.Context.Configurations
 {

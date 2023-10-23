@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UNAHUR.IoT.Business.Services;
-using UNAHUR.IoT.DAL.MOdels;
+using UNAHUR.IoT.DAL.Models;
 using UNAHUR.IoT.FirmwareService.Storage;
 
 namespace UNAHUR.IoT.FirmwareService.Controllers.v1
@@ -20,7 +20,8 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
     [ApiController]
     [AllowAnonymous]
     [Route("api/v{version:apiVersion}/firmware")]
-    [ApiVersion("1.0")]
+    [ApiVersion(1.0)]
+    [ApiVersion(2.0)]
     public class FirmwareController : ControllerBase
     {
         private readonly ILogger<FirmwareController> _log;
@@ -35,11 +36,6 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
             _firmwareStorage = firmwareStorage ?? throw new ArgumentNullException(nameof(firmwareStorage));
         }
 
-        /// <summary>
-        /// Retorna informacion sobre un repositorio puntual
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<CatalogItemsInfo>> Get(long id)
         {
@@ -71,10 +67,10 @@ namespace UNAHUR.IoT.FirmwareService.Controllers.v1
             // algun dato para relacionar con el modelo relacional.
 
             var tags = new Dictionary<string, string>
-        {
-            { "repo", repo },
-            { "originalName", uploadedFile.FileName }
-        };
+            {
+                { "repo", repo },
+                { "originalName", uploadedFile.FileName }
+            };
 
             using (var stream = uploadedFile.OpenReadStream())
             {

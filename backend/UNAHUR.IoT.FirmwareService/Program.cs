@@ -14,8 +14,6 @@ namespace UNAHUR.IoT.FirmwareService
             // Y LOS ORIGENES DE CONFIGURACION
             var builder = WebApplication.CreateBuilder(args);
 
-
-
             #region LOGGING 
             // CONFIGURA EL DESTINO DE LOG EN CASO QUE FALLE LA CONFIGURACION DE SERILOG
             Serilog.Debugging.SelfLog.Enable(Console.Error);

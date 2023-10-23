@@ -15,7 +15,9 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "UNAHUR.IoT.Database", "UNAH
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UNAHUR.IoT.Messaging", "UNAHUR.IoT.Messaging\UNAHUR.IoT.Messaging.csproj", "{FF26A816-5FB5-432F-833F-64C9EE134695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNAHUR.IoT.FirmwareService", "UNAHUR.IoT.FirmwareService\UNAHUR.IoT.FirmwareService.csproj", "{D72A8310-BCB7-479A-BD42-FD794D25BE74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UNAHUR.IoT.FirmwareService", "UNAHUR.IoT.FirmwareService\UNAHUR.IoT.FirmwareService.csproj", "{D72A8310-BCB7-479A-BD42-FD794D25BE74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNAHUR.IoT.Infra", "UNAHUR.IoT.Infra\UNAHUR.IoT.Infra.csproj", "{8345FCC8-1540-4BC6-BFE2-97835BA4380B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{D72A8310-BCB7-479A-BD42-FD794D25BE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D72A8310-BCB7-479A-BD42-FD794D25BE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D72A8310-BCB7-479A-BD42-FD794D25BE74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8345FCC8-1540-4BC6-BFE2-97835BA4380B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8345FCC8-1540-4BC6-BFE2-97835BA4380B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8345FCC8-1540-4BC6-BFE2-97835BA4380B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8345FCC8-1540-4BC6-BFE2-97835BA4380B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

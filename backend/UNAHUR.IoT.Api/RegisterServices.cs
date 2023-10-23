@@ -1,4 +1,4 @@
-﻿using Efunds.Shared.Web.Swagger;
+﻿using UNAHUR.IoT.Shared.Web.Swagger;
 using UNAHUR.IoT.Shared.Web.Utils;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using UNAHUR.IoT.Messaging.Configuration;
 using UNAHUR.IoT.Business;
-using Efunds.Shared.Web.Extensions;
+using UNAHUR.IoT.Shared.Web.Extensions;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 
@@ -79,14 +79,21 @@ namespace UNAHUR.IoT.Api
                 config.ReportApiVersions = true;
                 // versionado por namespace
                 //config.Conventions.Add(new VersionByNamespaceConvention());
-            });
-            /*
-            builder.Services.AddVersionedApiExplorer(setup =>
+            }).AddApiExplorer(
+            options =>
             {
-                setup.GroupNameFormat = "'v'VVV";
-                // esto es verdadero por que colocamos la version de la api en el controlador
-                setup.SubstituteApiVersionInUrl = true;
-            });*/
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                
+            });
+
+
 
             #endregion VERSIONADO DE API 
 

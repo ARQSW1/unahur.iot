@@ -54,6 +54,16 @@ services:
       /usr/bin/mc policy set public myminio/firmware-registry;
       exit 0;
       "
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./swagger/openapi.json:/openapi.json
+    environment:
+      URLS: "[ { url: 'http://localhost:8082/swagger/v1/swagger.json', name: 'v1' },{ url: 'http://localhost:8082/swagger/v2/swagger.json', name: 'v2' } ]"
+      # API_URL: ""
   # keycloak:
   #   image: quay.io/keycloak/keycloak:22.0
   #   command: ["start-dev","--import-realm"]

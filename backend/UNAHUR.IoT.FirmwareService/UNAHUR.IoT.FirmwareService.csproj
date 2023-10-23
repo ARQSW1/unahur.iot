@@ -11,7 +11,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="7.0.0" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
@@ -36,7 +36,7 @@
   <ItemGroup>
     <ProjectReference Include="..\UNAHUR.IoT.Business\UNAHUR.IoT.Business.csproj" />
     <ProjectReference Include="..\UNAHUR.IoT.Messaging\UNAHUR.IoT.Messaging.csproj" />
-    <ProjectReference Include="..\UNAHUR.IoT.Shared.Web\UNAHUR.IoT.Shared.Web.csproj" />
+    <ProjectReference Include="..\UNAHUR.IoT.Infra\UNAHUR.IoT.Infra.csproj" />
   </ItemGroup>
 
 

@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Efunds.Shared.Web.Extensions;
+using UNAHUR.IoT.Shared.Web.Extensions;
 using Asp.Versioning.ApiExplorer;
+using System.Linq;
+using Minio.Exceptions;
 
 namespace UNAHUR.IoT.FirmwareService
 {
@@ -24,7 +26,7 @@ namespace UNAHUR.IoT.FirmwareService
         {
             // serilog va primero por que sino no detecta los cambios hechos por el UseRFC7807ErrorHandler
             app.UseSerilogRequestLogging();
-
+            
             // MUY IMPORTANTE A TENER EN CUENTA
             // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-7.0#middleware-order
             app.UseRFC7807ErrorHandler();
@@ -38,62 +40,32 @@ namespace UNAHUR.IoT.FirmwareService
 
             if (app.Configuration.IsSwaggerEnabled())
             {
+                // el cors en .net core no lo pude hacer funcionar
+                app.Use((context, next) =>
+                {
+                    context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                    return next.Invoke();
+                });
 
                 app.UseSwagger();
-
-                app.UseSwaggerUI(options =>
-                {
-                    var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-                    //agrega un endpoint por cada version
-                    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
-                    {
-                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
-                            description.GroupName.ToUpperInvariant());
-                    }
-                });
             }
 
             app.UseRouting();
-
-
-            // global cors policy
-            /*
-            var origins = app.Configuration.CorsOrigins();
-            app.UseCors(x =>
-            {
-                x.AllowAnyMethod()
-                .AllowAnyHeader();
-
-
-                if (origins != null || origins.Contains("*"))
-                {
-                    // permite todos los origenes
-                    x.SetIsOriginAllowed(hostName => true);
-                    x.AllowCredentials();
-                }
-                else
-                {
-                    // https://*.example.com
-                    x.WithOrigins(origins).SetIsOriginAllowedToAllowWildcardSubdomains();
-                    x.AllowCredentials();
-                }
-            });*/
-
+            
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.MapControllers();
+
+            app.MapHealthChecks("/healthz/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+            { Predicate = r => false });
+
+            app.MapHealthChecks("/healthz/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
             {
-
-                endpoints.MapControllers();
-                endpoints.MapHealthChecks("/healthz/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
-                { Predicate = r => false });
-                endpoints.MapHealthChecks("/healthz/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
-                {
-                    Predicate = registration => registration.Tags.Contains("ready")
-                });
-
+                Predicate = registration => registration.Tags.Contains("ready")
             });
+            
             return app;
         }
     }

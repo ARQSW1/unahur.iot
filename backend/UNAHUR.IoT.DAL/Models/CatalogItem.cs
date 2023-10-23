@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace UNAHUR.IoT.DAL.MOdels;
+namespace UNAHUR.IoT.DAL.Models;
 
 [Table("CatalogItems", Schema = "common")]
 public partial class CatalogItem

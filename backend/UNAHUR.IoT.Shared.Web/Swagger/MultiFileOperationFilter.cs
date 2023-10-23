@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Efunds.Shared.Web.Swagger
+namespace UNAHUR.IoT.Shared.Web.Swagger
 {
     /// <summary>
     /// Filtro de operaciones API que suben mas de un archivo 
